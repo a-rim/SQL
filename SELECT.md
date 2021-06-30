@@ -1,28 +1,28 @@
 ### 1. 기본 문법
 
-##### SELECT	[ALL|DISTINCT] 출력하려는 열 (* : 모든 열) 	[AS]	별칭
+##### ⑤ SELECT	[ALL|DISTINCT] 출력하려는 열 (* : 모든 열) 	[AS]	별칭
 
 	- ALL
-
+	
 	- DISTINCT : 중복 제거. 뒤에 열 이름을 계속 나열하면 모두 DISTICNT가 적용된다
-	- AS : 열 이름을 임시로 변경하여 출력, 생략 가능. 별칭에 공백, 특수문자, 대소문자 등을 사용하려면 큰따옴표("")로 묶어서 사용
+	- AS : 열 이름을 임시로 변경하여 출력. 별칭에 공백, 특수문자, 대소문자 등을 사용하려면 큰따옴표("")로 묶어서 사용
 
-##### FROM	테이블
+##### ① FROM	테이블
 
-##### WHERE	검색조건
+##### ② WHERE	검색조건
 
-##### GROUP BY	속성이름 [DESC|ASC]
+##### ③ GROUP BY	속성이름 [DESC|ASC]
 
 	- 정렬을 원하는 열 이름을 순서대로 지정
 	- 내림차순으로 정렬하려면 열 이름 다음에 **DESC**
 
-##### HAVING	검색조건
+##### ④ HAVING	검색조건
 
-##### ORDER BY	열 이름, 열 이름 DESC(내림차순) ;
+##### ⑥ ORDER BY	열 이름, 열 이름 DESC(내림차순) ;
 
 *코드마지막에는 항상 ;*
 
-
+*where은 grouping 전 / having은 grouping 후*
 
 
 
@@ -107,4 +107,67 @@ OR job_id = 'FI_ACCOUNT';
 
 
 ### 3. GROUP BY
+
+집계를 하기 위해서는 GROUP BY 문을 사용하고 구체적인 집계 내용은 집계 함수를 사용
+
+#### 집계함수
+
+| 집계 함수 | 문법                                 | 사용 예    |
+| --------- | ------------------------------------ | ---------- |
+| SUM       | SUM([ALL\|DISTINCT] 속성이름)        | SUM(price) |
+| AVG       | AVG([ALL\|DISTINCT] 속성이름)        | AVG(price) |
+| COUNT     | COUNT([ALL\|DISTINCT] 속성이름 \| *) | COUNT(*)   |
+| MAX       | MAX([ALL\|DISTINCT] 속성이름)        | MAX(price) |
+| MIN       | MIN([ALL\|DISTINCT] 속성이름)        | MIN(price) |
+
+#### 주의사항
+
+1. GROUP BY로 투플을 그룹으로 묶은 후 SELECT 절에는 GROUP BY에서 사용한 <속성>과 집계 함수만 나올 수 있다.
+2. WHERE 절과 HAVING 절이 같이 포함된 SQL 문은 검색조건이 모호해질 수 있다. HAVING절은 반드시 GROUP BY 절과 같이 작성해야하고, WHERE 절보다 뒤에 나와야한다. <검색조건>에는 SUM, AVG, MAX, MIN, COUNT와 같은 집계함수가 와야 한다
+
+
+
+### 4. JOIN
+
+: 한 테이블의 행을 다른 테이블의 행에 연결하여 두 개 이상의 테이블을 결합하는 연산
+
+- 두 테이블을 아무런 조건을 주지 않고 SELECT 시키면 관계대수의 카티전 프로젝트 연산
+
+- WHERE 절에 두 테이블의 연결 조건 추가
+
+  *겹치는 열 이름을 표기할 때는 '테이블이름.열이름' 형식으로 정확히 명시*
+
+##### 동등 조인
+
+```
+SELECT	<속성들>
+FROM	Table1, Table2
+WHERE	<조인조건> AND <검색조건>
+```
+
+```
+SELECT	<속성들>
+FROM	Table1 INNER JOIN Table2 ON <조인조건>
+WHERE	<검색조건>
+```
+
+##### 외부 조인
+
+```
+SELECT  <속성들>
+FROM    Table1 {LEFT|RIGHT|FULL [OUTER]} JOIN Table2 ON <조인조건>
+WHERE   <검색조건>
+```
+
+##### 셀프 조인
+
+: 하나의 테이블(자신)을 대상으로 조인하는 것 -> 조인에 참여하는 속성명이 같아지는 문제가 생기므로 테이블 별칭을 사용
+
+```
+-- 사원 'BLAKE'가 관리하는 부하사원의 이름과 직급
+-- Emp 테이블 : 사원번호(empno), 이름(ename), 직급(job), 직원관리자 사원번호(mgr)
+SELECT	staff.ename, staff.job
+FROM	Emp staff, Emp manager
+WHERE	staff.mgr=manager.empno AND manager.ename LIKE 'BLAKE';
+```
 
