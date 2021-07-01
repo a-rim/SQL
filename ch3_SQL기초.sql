@@ -141,7 +141,79 @@ SELECT	name, bookname
 FROM	Customer, Orders, Book
 WHERE	Customer.custid = Orders.custid AND Orders.bookid = Book.bookid;
 
+/* 27 */
+SELECT	name, saleprice
+FROM	Customer LEFT OUTER JOIN Orders ON Customer.custid = Orders.custid;
 
+/* 28 */
+SELECT	bookname, MAX(price)
+FROM	Book;  -- error
+
+SELECT	bookname
+FROM	Book
+WHERE	price = (SELECT	MAX(price)	FROM	Book);
+
+/* 29 */
+SELECT	name
+FROM	Customer
+WHERE	custid IN (SELECT custid	FROM Orders);
+-- 서브쿼리가 n x 1 table을 반환하는 경우 IN 사용
+
+/* 30 */
+SELECT	name
+FROM	Customer
+WHERE	custid IN (SELECT	custid	
+				    FROM	Orders
+                    WHERE	bookid IN (SELECT	bookid
+										FROM	Book
+                                        WHERE	publisher = '대한미디어'));
+
+/* 31 */
+SELECT	publisher, AVG(price)
+FROM	Book
+GROUP BY	publisher;
+
+SELECT	bookname, publisher
+FROM	Book b1
+WHERE	b1.price > (SELECT	AVG(b2.price)
+					FROM	Book b2
+					WHERE	b1.publisher = b2.publisher);
+
+-- error
+SELECT	bookname
+FROM	Book b1
+WHERE	b1.price > (SELECT	b2.price
+					FROM	Book b2
+					WHERE	b1.publisher = b2.publisher
+                    GROUP BY	publisher);
+
+/* 32 */
+SELECT	name
+FROM	Customer
+WHERE	address LIKE '대한민국%'
+UNION
+SELECT	name
+FROM	Customer
+WHERE	custid IN (SELECT	custid
+					FROM	Orders);
+
+SELECT	name
+FROM	Customer
+WHERE	address LIKE '대한민국%' AND
+		custid NOT IN (SELECT	custid
+						FROM	Orders);
+
+select	name
+from	Customer
+where	address LIKE '대한민국%' and
+		name NOT IN (select	name
+					from	Customer
+					where	custid IN (select custid from Orders));
+
+SELECT	name
+FROM	Customer
+WHERE	address LIKE '대한민국%' AND
+		
 
 /*  */
 SELECT
