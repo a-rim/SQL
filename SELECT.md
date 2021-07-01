@@ -26,7 +26,7 @@
 
 
 
-### 2. WHERE 조건절
+### 2. WHERE
 
 | 술어     | 연산자               | 사용 예                                           |
 | -------- | -------------------- | ------------------------------------------------- |
@@ -170,4 +170,31 @@ SELECT	staff.ename, staff.job
 FROM	Emp staff, Emp manager
 WHERE	staff.mgr=manager.empno AND manager.ename LIKE 'BLAKE';
 ```
+
+
+
+### 5. Sub Query
+
+: SQL 문 내에 또 다른 SQL 문
+
+- WHERE 절에 또 다른 테이블 결과를 이용하기 위해 다시 SELECT 문을 괄호로 묶는 것
+
+- WHERE 절의 부속질의를 먼저 처리 후 전체 질의 처리
+- 부속질의의 결과가 (1X1)이면 =, (nX1)이면 IN 사용
+
+*부속질의는 SELECT 문에 나오는 결과 속성을 FROM 절의 테이블에서만 얻을 수 있고, 조인은 조인한 모든 테이블에서 결과 속성을 얻을 수 있음*
+
+
+
+### 6. 집합 연산
+
+: 테이블 간의 집한 연산을 이용하여 합집합, 차집합, 교집합을 구할 수 있음
+
+- 합집합 : UNION / UNION ALL(중복 포함)
+- 차집합 : NOT IN
+- 교집합 : IN
+
+*MySQL은 MINUS, INTERSECTION 연산 없음*
+
+
 
